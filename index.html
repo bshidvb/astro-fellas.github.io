@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Our Constellation — Friends’ Diary</title>
+
+    <!-- Fonts: safe to leave as-is. You don’t have to edit these. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+
+    <style>
+      :root {
+        --bg-1: #0b1023;
+        --bg-2: #0a0f21;
+        --text: #e6eeff;
+        --muted: #b8c2d9;
+        --card: rgba(255, 255, 255, 0.04);
+        --card2: rgba(255, 255, 255, 0.06);
+        --border: rgba(122, 226, 255, 0.25);
+        --accent: #7ae2ff;  /* cyan */
+        --accent-2: #a78bfa; /* purple */
+        --accent-3: #ffd166; /* warm gold for highlights */
+        --shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+        --radius: 14px;
+      }
+
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        color: var(--text);
+        background:
+          /* star layers */
+          radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.75) 0, rgba(255,255,255,0.75) 2px, transparent 3px),
+          radial-gradient(1.5px 1.5px at 140px 80px, rgba(255,255,255,0.6) 0, rgba(255,255,255,0.6) 1.5px, transparent 2.5px),
+          radial-gradient(1px 1px at 90px 170px, rgba(255,255,255,0.45) 0, rgba(255,255,255,0.45) 1px, transparent 2px),
+          linear-gradient(180deg, #0b1023 0%, #0a1029 60%, #0b1230 100%);
+        background-size: 200px 200px, 260px 260px, 320px 320px, auto;
+        background-attachment: fixed, fixed, fixed, fixed;
+        font: 400 18px/1.65 "Lora", serif;
+        letter-spacing: 0.2px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        animation: starScroll 120s linear infinite;
+      }
+
+      @keyframes starScroll {
+        0%   { background-position: 0 0, 0 0, 0 0, 0 0; }
+        100% { background-position: 500px 900px, -300px 700px, 200px 600px, 0 0; }
+      }
+
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+
+      .container { max-width: 960px; margin: 0 auto; padding: 24px 18px 64px; }
+
+      header.site {
+        position: relative;
+        padding: 28px 20px;
+        border-radius: var(--radius);
+        background: linear-gradient(180deg, rgba(167, 139, 250, 0.12), rgba(122, 226, 255, 0.08));
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      header.site::after {
+        content: "";
+        position: absolute; inset: -20% -20% auto auto; height: 300px; width: 300px;
+        background: radial-gradient(closest-side, rgba(122,226,255,0.15), transparent 70%);
+        filter: blur(6px);
+        transform: translate(10%, -10%);
+        pointer-events: none;
+      }
+
+      .brand {
+        display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      }
+      .brand h1 {
+        margin: 0; font: 700 36px/1.2 "Space Grotesk", system-ui, sans-serif;
+        letter-spacing: 0.5px;
+      }
+      .brand .icons { font-size: 22px; opacity: 0.9; }
+
+      nav.site-nav { margin-top: 14px; display: flex; gap: 16px; flex-wrap: wrap; }
+      nav.site-nav a {
+        display: inline-block; padding: 7px 12px; border-radius: 999px;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: var(--text);
+      }
+      nav.site-nav a:hover { background: rgba(255,255,255,0.1); }
+
+      .note {
+        margin: 18px 0 0; font-size: 14px; color: var(--muted);
+      }
+
+      /* Cards / entries */
+      .card {
+        background: linear-gradient(180deg, var(--card), var(--card2));
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px 18px 20px;
+        margin: 22px 0;
+        box-shadow: var(--shadow);
+      }
+      .card h2, .card h3 {
+        font-family: "Space Grotesk", system-ui, sans-serif;
+        letter-spacing: 0.3px; margin: 0 0 8px;
+      }
+      .meta {
+        color: var(--muted); font-size: 14px; margin-bottom: 10px;
+      }
+      .meta .author { color: #cfe8ff; }
+
+      .entry { position: relative; }
+      .entry::before {
+        content: ""; position: absolute; inset: 0; border-radius: var(--radius);
+        pointer-events: none; background:
+          linear-gradient(180deg, rgba(167,139,250,0.15), transparent 60%);
+        mix-blend-mode: screen; opacity: 0.6;
+      }
+
+      .tags { display: flex; gap: 8px; flex-wrap: wrap; padding: 0; margin: 12px 0 0; list-style: none; }
+      .tag {
+        font: 700 12px/1.2 "Space Grotesk", system-ui, sans-serif;
+        letter-spacing: 0.3px;
+        padding: 6px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.2);
+        background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.06));
+        color: #eef6ff; display: inline-flex; align-items: center; gap: 6px;
+        box-shadow: 0 1px 0 rgba(255,255,255,0.08) inset;
+      }
+      .tag .emoji { filter: drop-shadow(0 0 6px rgba(255,255,255,0.25)); }
+
+      figure { margin: 14px 0; }
+      figure img {
+        width: 100%; height: auto; display: block; border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.18);
+      }
+      figcaption { color: var(--muted); font-size: 14px; margin-top: 6px; }
+
+      .blockquote {
+        padding: 10px 14px; margin: 12px 0;
+        border-left: 3px solid var(--accent-2);
+        background: rgba(167,139,250,0.08);
+        border-radius: 8px;
+        font-style: italic; color: #eae7ff;
+      }
+
+      details.instructions { margin-top: 18px; }
+      details.instructions summary {
+        cursor: pointer; user-select: none; font-family: "Space Grotesk", system-ui, sans-serif;
+        font-weight: 700; letter-spacing: 0.3px;
+      }
+      details.instructions .inside { color: var(--muted); }
+      code.inline { padding: 1px 6px; border-radius: 6px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); }
+
+      footer.site {
+        margin: 26px 0 0; padding: 16px; text-align: center; color: var(--muted);
+      }
+
+      /* Small screens */
+      @media (max-width: 640px) {
+        .brand h1 { font-size: 28px; }
+        body { font-size: 17px; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!--
+      HOW TO USE THIS DIARY (quick reference)
+      ---------------------------------------
+      1) To add a new diary entry:
+           - Copy everything from:   <!-- START: ENTRY TEMPLATE -->  to  <!-- END: ENTRY TEMPLATE -->
+           - Paste it ABOVE the comment  <!-- PASTE NEW ENTRIES ABOVE THIS LINE -->
+           - Replace the placeholder text with your own.
+
+      2) To add a picture:
+           - Put your image file in a folder named `images` (next to this file), e.g. images/my-photo.jpg
+           - Replace the `src` inside <img src="..."> with your file path.
+           - Replace the `alt` text with a short description of the picture.
+
+      3) To change the author, date, and title:
+           - Edit the text inside <h2> for the title.
+           - Edit the name inside <span class="author">.
+           - Update the <time> text and its datetime attribute (YYYY-MM-DD is perfect).
+
+      4) Tags:
+           - Keep or change the tag pills at the bottom (astronomy, radiology, movies, piano, etc.).
+           - You can add emojis like 🪐 🎬 🩻 🎹 to match the theme.
+
+      5) Tip: If you’re unsure, only edit text between > and <, and replace image file names.
+    -->
+
+    <div class="container">
+      <header class="site">
+        <div class="brand">
+          <h1>Our Constellation — Friends’ Diary</h1>
+          <div class="icons" aria-hidden="true">🪐 🎬 🩻 🎹</div>
+        </div>
+        <nav class="site-nav">
+          <a href="#template">New Entry Template</a>
+          <a href="#entries">Entries</a>
+        </nav>
+        <p class="note">A shared space for our stories — astronomy nights, X-ray curiosities, film marathons, cultural finds, and piano moments.</p>
+
+        <details class="instructions">
+          <summary>Show quick instructions</summary>
+          <div class="inside">
+            <p>Copy the template block below, paste it where indicated, then replace the “Insert text here” parts with your story. To add a photo, put it into an <code class="inline">images</code> folder and change the <code class="inline">src</code> path.</p>
+          </div>
+        </details>
+      </header>
+
+      <!-- ========================= TEMPLATE (copy/paste this block) ========================= -->
+      <section id="template" class="card">
+        <h2>New Entry Template</h2>
+        <p class="meta">Copy from “START” to “END” and paste above the marker in the Entries section.</p>
+
+        <!-- START: ENTRY TEMPLATE -->
+        <article class="entry card" aria-label="Diary entry template">
+          <!-- TITLE: Replace with your entry title -->
+          <h2>Insert your title here</h2>
+
+          <!-- META: Fill in your name and the date -->
+          <div class="meta">
+            By <span class="author">Your Name</span> — <time datetime="2025-01-01">Jan 1, 2025</time>
+          </div>
+
+          <!-- TEXT: Replace the paragraphs below with your story -->
+          <p>Insert text here. Share what happened, what you felt, what you watched, what you discovered in the sky, what you practiced on the piano — anything you want.</p>
+          <p>Add as many paragraphs as you like. You can also insert a short quote for emphasis:</p>
+
+          <!-- OPTIONAL QUOTE: Keep or remove -->
+          <div class="blockquote">“This is how you add a quote for a thought or a lyric.”</div>
+
+          <!-- IMAGE: To add a picture, keep this <figure> and change the file path + caption. -->
+          <figure>
+            <!-- Replace images/your-photo.jpg with your own file (e.g., images/venus.jpg) -->
+            <img src="images/your-photo.jpg" alt="Describe your photo here" />
+            <figcaption>Optional caption: Insert description here.</figcaption>
+          </figure>
+
+          <!-- TAGS: Keep, remove, or edit the tags below. You can add emojis. -->
+          <ul class="tags">
+            <li class="tag"><span class="emoji">🪐</span> astronomy</li>
+            <li class="tag"><span class="emoji">🩻</span> radiology</li>
+            <li class="tag"><span class="emoji">🎬</span> movies</li>
+            <li class="tag"><span class="emoji">🎹</span> piano</li>
+          </ul>
+        </article>
+        <!-- END: ENTRY TEMPLATE -->
+      </section>
+      <!-- ======================= /TEMPLATE (stop copying here) ======================= -->
+
+      <section id="entries">
+        <h2 class="visually-hidden">Entries</h2>
+
+        <!-- PASTE NEW ENTRIES ABOVE THIS LINE -->
+
+        <!-- SAMPLE ENTRY (you can delete this one) -->
+        <article class="entry card">
+          <h2>First Light on Jupiter</h2>
+          <div class="meta">By <span class="author">A.</span> — <time datetime="2025-02-04">Feb 4, 2025</time></div>
+          <p>We took the scope out after dinner and caught Jupiter just above the horizon. Four moons in a neat line! We argued about which one was Io (and who was right). After that, we went inside and watched an old noir classic while someone improvised a moody piano theme. Perfect night.</p>
+
+          <figure>
+            <img src="images/example-jupiter.jpg" alt="A bright disk of Jupiter with its Galilean moons" />
+            <figcaption>Jupiter with the Galilean moons — handheld phone through the eyepiece.</figcaption>
+          </figure>
+
+          <ul class="tags">
+            <li class="tag"><span class="emoji">🪐</span> astronomy</li>
+            <li class="tag"><span class="emoji">🎬</span> movies</li>
+            <li class="tag"><span class="emoji">🎹</span> piano</li>
+          </ul>
+        </article>
+        <!-- END SAMPLE ENTRY -->
+      </section>
+
+      <footer class="site">Made with friends, stars, and stories ✨</footer>
+    </div>
+
+    <!-- Accessibility helpers -->
+    <style>
+      .visually-hidden {
+        position: absolute !important;
+        height: 1px; width: 1px; overflow: hidden;
+        clip: rect(1px, 1px, 1px, 1px); white-space: nowrap; clip-path: inset(50%);
+      }
+    </style>
+  </body>
+</html>
+
